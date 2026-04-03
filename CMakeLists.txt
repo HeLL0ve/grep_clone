@@ -3,4 +3,8 @@ project(grep_clone)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(grep_clone main.cpp)
+add_executable(grep_clone src/main.cpp
+        src/Grep.cpp
+        src/FileReader.cpp)
+
+target_include_directories(grep_clone PRIVATE include)
