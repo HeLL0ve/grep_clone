@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(grep_clone src/main.cpp
         src/Grep.cpp
-        src/FileReader.cpp)
+        src/FileReader.cpp
+        include/Grep.h
+        include/FileReader.h)
 
 target_include_directories(grep_clone PRIVATE include)

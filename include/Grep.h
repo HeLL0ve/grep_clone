@@ -4,5 +4,16 @@
 
 #ifndef GREP_CLONE_GREP_H
 #define GREP_CLONE_GREP_H
+#include <string>
+#include <vector>
 
+class Grep {
+public:
+    std::vector<std::string> search(
+        const std::string& mode,
+        const std::vector<std::string>& lines,
+        const std::string& pattern,
+        const std::string& flag
+    );
+};
 #endif //GREP_CLONE_GREP_H
