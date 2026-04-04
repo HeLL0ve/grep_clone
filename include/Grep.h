@@ -9,11 +9,11 @@
 
 class Grep {
 public:
-    std::vector<std::string> search(
-        const std::string& mode,
-        const std::vector<std::string>& lines,
+    static std::string search(
+        const std::string& line,
+        const int& lineNumber,
         const std::string& pattern,
-        const std::string& flag
+        const std::vector<std::string>& flags
     );
 };
 #endif //GREP_CLONE_GREP_H
