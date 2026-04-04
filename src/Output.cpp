@@ -7,40 +7,18 @@
 #include <iostream>
 #include <ostream>
 
-struct OutputOptions {
-    bool cmd = true;
-    bool file = false;
-};
-OutputOptions outputOptions(const std::string &resultFile, const std::vector<std::string> &flags) {
-    OutputOptions o;
-    if (!resultFile.empty()) {
-        o.file = true;
-    }
-    for (auto& flag : flags) {
-        if (flag == "--no-cmd") {
-            o.cmd = false;
+void Output::pushCLI(const std::string& line) {
+    std::cout << line << std::endl;
+}
+void Output::pushFile(const std::vector <std::string>& lines, const std::string& file_name) {
+    std::ofstream file(file_name, std::ios::app);
+    if (file.is_open()) {
+        for (const auto& line : lines) {
+            file << line << std::endl;
         }
-    }
-    return o;
-};
-
-void Output::push(const std::string &line, const std::string &resultFile, const std::vector<std::string> &flags) {
-    try {
-        OutputOptions o = outputOptions(resultFile, flags);
-        if (o.cmd) {
-            std::cout << line << std::endl;
-        }
-        if (o.file) {
-            std::ofstream file(resultFile, std::ios::app);
-
-            if (file.is_open()) {
-                file << line << std::endl;
-                file.close();
-            } else {
-                throw(std::runtime_error("Problem opening output file"));
-            }
-        }
-    }catch (std::exception &e) {
-        std::cout<<e.what()<<std::endl;
+        file.close();
+    } else {
+        std::cerr << "Problem opening output file" << std::endl;
+        throw(std::runtime_error("Problem opening output file"));
     }
 }

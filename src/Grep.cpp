@@ -7,72 +7,40 @@
 #include <cctype>
 #include <regex>
 #include <stdexcept>
-struct Options {
-    bool ignoreCase = false;
-    bool lineNumber = false;
-    bool regex = false;
-};
-Options convertToOptions(const std::vector<std::string> &flags) {
-    Options options;
-    if (!flags.empty()) {
-        for (const auto& flag : flags) {
-            if (flag == "--ignore-case") {
-                options.ignoreCase = true;
-            }else if (flag == "--regex") {
-                options.regex = true;
-            }else if (flag == "--line-number") {
-                options.lineNumber = true;
-            }else if (flag == "--no-cmd") {
-            }else {
-                throw std::runtime_error("Unknown flag: " + flag);
-            }
-        }
-    }
-    return options;
+
+std::string normalizedMatch(std::string line) {
+    std::ranges::transform(line, line.begin(), [](unsigned char ch) {return static_cast<char>(std::tolower(ch));});
+    return line;
 }
 
-std::string Grep::search(const std::string &line, const int& lineNumber, const std::string &pattern, const std::vector<std::string> &flags) {
-    Options opt = convertToOptions(flags);
 
-    auto formatMatch = [opt](std::size_t lineIndex, const std::string& line) {
-        if (!opt.lineNumber) {
-            return line;
-        }
-        return std::to_string(lineIndex) + ": " + line;
-    };
-    auto normalizedMatch = [opt](std::string& lin) {
-        if (!opt.ignoreCase) {
-            return lin;
-        }
-        std::ranges::transform(lin, lin.begin(), [](unsigned char ch) {return static_cast<char>(std::tolower(ch));});
-        return lin;
-    };
-
-    if (!opt.regex) {
+bool Grep::search(const std::string &line, const std::string& pattern, const Options &options) {
+    if (!options.regex) {
         std::string normalizedPattern = pattern;
-        normalizedPattern = normalizedMatch(normalizedPattern);
-
         std::string normalizedLine = line;
-        normalizedLine = normalizedMatch(normalizedLine);
-
+        if (options.ignoreCase) {
+            normalizedPattern = normalizedMatch(normalizedPattern);
+            normalizedLine = normalizedMatch(normalizedLine);
+        }
         if (normalizedLine.find(normalizedPattern) != std::string::npos) {
-            return formatMatch(lineNumber, line);
-        }else {
-            return "";
+            return true;
         }
-    }else{
-        try {
-            const auto regexFlags = opt.ignoreCase
-            ? std::regex_constants::grep | std::regex_constants::icase
-            : std::regex_constants::grep;
-            std::regex r(pattern, regexFlags);
-            if (std::regex_search(line, r)) {
-                return formatMatch(lineNumber, line);
-            }else {
-                return "";
-            }
-        }catch (const std::regex_error& e) {
-            throw std::runtime_error("Invalid regex pattern: " + std::string(e.what()));
-        }
+        return false;
     }
+    try {
+        const auto regexFlags = options.ignoreCase
+                                    ? std::regex_constants::ECMAScript | std::regex_constants::icase
+                                    : std::regex_constants::ECMAScript;
+        std::regex r(pattern, regexFlags);
+        if (std::regex_search(line, r)) {
+            return true;
+        }
+        return false;
+    }catch (const std::regex_error& e) {
+        throw;
+    }
+
+
+
+
 }

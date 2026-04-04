@@ -4,16 +4,14 @@
 
 #ifndef GREP_CLONE_FILEREADER_H
 #define GREP_CLONE_FILEREADER_H
+#include <optional>
 #include <string>
-#include <vector>
 
 class FileReader {
 public:
-    static void readLines(
+    static std::optional<std::string> readLines(
         const std::string& filename,
-        const std::string& pattern,
-        const std::string& resultFile,
-        const std::vector<std::string>& flags
+        std::size_t currentLine
         );
 };
 #endif //GREP_CLONE_FILEREADER_H

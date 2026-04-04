@@ -5,15 +5,15 @@
 #ifndef GREP_CLONE_GREP_H
 #define GREP_CLONE_GREP_H
 #include <string>
-#include <vector>
+
+#include "Options.h"
 
 class Grep {
 public:
-    static std::string search(
+    static bool search(
         const std::string& line,
-        const int& lineNumber,
         const std::string& pattern,
-        const std::vector<std::string>& flags
+        const Options& options
     );
 };
 #endif //GREP_CLONE_GREP_H

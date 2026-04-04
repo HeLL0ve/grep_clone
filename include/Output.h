@@ -9,10 +9,10 @@
 
 class Output {
 public:
-    static void push(
-        const std::string& line,
-        const std::string& resultFile,
-        const std::vector<std::string>& flag
+    static void pushCLI(const std::string& line);
+    static void pushFile(
+        const std::vector<std::string>& lines,
+        const std::string& file_name
         );
 };
 #endif //GREP_CLONE_OUTPUT_H
